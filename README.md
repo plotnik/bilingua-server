@@ -1,14 +1,52 @@
 # Bilingua Server
 
-A Spring Boot REST API server for managing bilingual text paragraphs. This server provides endpoints for tracking reading position and retrieving bilingual text content.
+A Spring Boot REST API application for comparing and managing bilingual texts in different languages. The application reads markdown files and provides REST endpoints for paragraph-by-paragraph comparison and navigation.
+
+## Overview
+
+Bilingua Server enables side-by-side comparison of texts in two different languages by:
+- Reading two markdown files specified in configuration
+- Breaking down texts into paragraphs for comparison
+- Maintaining a pointer to track the current reading position
+- Providing REST APIs for navigation and text retrieval
+- Supporting text editing and persistence back to files
 
 ## Features
 
-- **Pointer Management**: Track and update reading position in bilingual texts
-- **REST API**: Clean RESTful endpoints for text management
+- **Bilingual Text Comparison**: Compare texts paragraph by paragraph
+- **Markdown File Support**: Reads texts from markdown files in Obsidian folders
+- **Position Tracking**: Maintains current reading position with persistent storage
+- **REST API**: Clean RESTful endpoints for text navigation and editing
+- **Text Editing**: Modify paragraphs and save changes back to source files
 - **OpenAPI/Swagger**: Interactive API documentation
-- **Spring Boot**: Built on robust Spring Boot framework
-- **Maven**: Standard Maven project structure
+- **Configuration-Based**: Uses properties file for flexible setup
+
+## Configuration
+
+The application reads configuration from `bi.properties` file located in the `bilingua` folder in your user home directory.
+
+### Configuration File Location
+```
+~/Documents/pi/bilingua/bi.properties
+```
+
+### Required Properties
+```properties
+book=path/to/your/obsidian/folder
+left_name=relative/path/to/first/language/file.md
+right_name=relative/path/to/second/language/file.md
+```
+
+### Example Configuration
+```properties
+book=/Users/username/Documents/MyObsidianVault
+left_name=books/novel_english.md
+right_name=books/novel_russian.md
+```
+
+## Position Persistence
+
+The application maintains a `ptr.txt` file in the `~/bilingua/` folder to store the current paragraph position. If this file doesn't exist, the position defaults to 0.
 
 ## Getting Started
 
@@ -16,6 +54,8 @@ A Spring Boot REST API server for managing bilingual text paragraphs. This serve
 
 - Java 21 or higher
 - Maven 3.6+ (or use the included Maven wrapper)
+- Obsidian vault or folder with markdown files
+- Configuration file setup (see Configuration section)
 
 ### Building the Project
 
@@ -23,19 +63,11 @@ A Spring Boot REST API server for managing bilingual text paragraphs. This serve
 # Using Maven wrapper (recommended)
 ./mvnw clean compile
 
-# Or with system Maven
-mvn clean compile
-```
-
 ### Running the Application
 
 ```bash
 # Using Maven wrapper
 ./mvnw spring-boot:run
-
-# Or with system Maven
-mvn spring-boot:run
-```
 
 The server will start on `http://localhost:8080` by default.
 
@@ -51,19 +83,45 @@ The executable JAR will be created in the `target/` directory.
 
 Once the application is running, you can access the interactive API documentation at:
 
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **Swagger UI**: http://localhost:8080/swagger-ui/index.html
 - **OpenAPI Spec**: http://localhost:8080/v3/api-docs
 
 ## API Endpoints
 
 ### Pointer Management
 
-- `GET /ptr` - Get current pointer position
-- `POST /ptr?n={value}` - Set pointer position to a specific value
+- **GET /ptr** - Get current pointer position
+  - Returns: Current paragraph position as integer
+
+- **POST /ptr?n={value}** - Set pointer position
+  - Parameters: `n` - New position (must be >= 0)
+  - Sets the current paragraph position to the specified value
 
 ### Paragraph Retrieval
 
-- `GET /pars` - Get bilingual paragraph pairs (see API docs for parameters)
+- **GET /pars?shift={shift}** - Get bilingual paragraph pair
+  - Parameters: `shift` - Offset from current position (default: 0)
+  - Returns: JSON object with `left` and `right` paragraph texts
+  - Example response:
+    ```json
+    {
+      "left": "English paragraph text",
+      "right": "Russian paragraph text"
+    }
+    ```
+
+### Text Editing
+
+- **POST /save** - Save modified paragraph texts
+  - Body: JSON with `left` and/or `right` text content
+  - Example request:
+    ```json
+    {
+      "left": "Updated English text",
+      "right": "Updated Russian text"
+    }
+    ```
+  - If text is modified, the corresponding markdown file is updated and paragraph lists are reloaded
 
 ## Project Structure
 
@@ -85,13 +143,14 @@ src/
     └── java/                                   # Test classes
 ```
 
-## Configuration
+## Usage Workflow
 
-The application can be configured through `src/main/resources/application.properties`. 
-
-Key configuration options:
-- Server port: `server.port=8080`
-- Application context path: `server.servlet.context-path=/`
+1. **Setup Configuration**: Create `~/bilingua/bi.properties` with your markdown file paths
+2. **Start Application**: Run the Spring Boot application
+3. **Navigate Texts**: Use `/ptr` endpoints to move through paragraphs
+4. **Compare Paragraphs**: Use `/pars` endpoint to retrieve text at current or offset positions
+5. **Edit Content**: Use `/save` endpoint to modify and persist paragraph changes
+6. **Track Progress**: Position is automatically saved to `~/bilingua/ptr.txt`
 
 ## Development
 
@@ -101,29 +160,6 @@ Key configuration options:
 ./mvnw test
 ```
 
-### Code Style
-
-This project follows standard Java coding conventions. Please ensure your code:
-- Uses proper indentation (4 spaces)
-- Includes appropriate Javadoc comments
-- Follows Spring Boot best practices
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-- **plotnik** - [GitHub Profile](https://github.com/plotnik)
-
-## Support
-
-If you encounter any issues or have questions, please [open an issue](https://github.com/plotnik/bilingua-server/issues) on GitHub.
