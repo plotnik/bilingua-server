@@ -46,7 +46,7 @@ right_name=books/novel_russian.md
 
 ## Position Persistence
 
-The application maintains a `ptr.txt` file in the `/bilingua/` folder to store the current paragraph position. If this file doesn't exist, the position defaults to 0.
+The application maintains a `ptr.txt` file in the `bilingua/` folder to store the current paragraph position. If this file doesn't exist, the position defaults to 0.
 
 ## Getting Started
 
@@ -143,12 +143,12 @@ src/
 
 ## Usage Workflow
 
-1. **Setup Configuration**: Create `~/bilingua/bi.properties` with your markdown file paths
+1. **Setup Configuration**: Create `bilingua/bi.properties` with your markdown file paths
 2. **Start Application**: Run the Spring Boot application
 3. **Navigate Texts**: Use `/ptr` endpoints to move through paragraphs
 4. **Compare Paragraphs**: Use `/pars` endpoint to retrieve text at current or offset positions
 5. **Edit Content**: Use `/save` endpoint to modify and persist paragraph changes
-6. **Track Progress**: Position is automatically saved to `~/bilingua/ptr.txt`
+6. **Track Progress**: Position is automatically saved to `bilingua/ptr.txt`
 
 ## Development
 
