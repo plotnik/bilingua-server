@@ -60,14 +60,14 @@ The application maintains a `ptr.txt` file in the `~/bilingua/` folder to store 
 ### Building the Project
 
 ```bash
-# Using Maven wrapper (recommended)
 ./mvnw clean compile
+```
 
 ### Running the Application
 
 ```bash
-# Using Maven wrapper
 ./mvnw spring-boot:run
+```
 
 The server will start on `http://localhost:8080` by default.
 
@@ -77,7 +77,7 @@ The server will start on `http://localhost:8080` by default.
 ./mvnw clean package
 ```
 
-The executable JAR will be created in the `target/` directory.
+The WAR file will be created in the `target/` directory.
 
 ## API Documentation
 
