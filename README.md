@@ -23,7 +23,7 @@ Bilingua Server enables side-by-side comparison of texts in two different langua
 
 ## Configuration
 
-The application reads configuration from `bi.properties` file located in the `bilingua` folder in your user home directory.
+The application reads configuration from `bi.properties` file located in the `Documents/pi/bilingua/` folder in your user home directory.
 
 ### Configuration File Location
 ```
