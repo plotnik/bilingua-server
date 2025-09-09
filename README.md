@@ -46,7 +46,7 @@ right_name=books/novel_russian.md
 
 ## Position Persistence
 
-The application maintains a `ptr.txt` file in the `~/bilingua/` folder to store the current paragraph position. If this file doesn't exist, the position defaults to 0.
+The application maintains a `ptr.txt` file in the `/bilingua/` folder to store the current paragraph position. If this file doesn't exist, the position defaults to 0.
 
 ## Getting Started
 
@@ -133,14 +133,14 @@ src/
 │   │       ├── BilinguaServerApplication.java    # Main application class
 │   │       ├── config/                           # Configuration classes
 │   │       ├── controller/                       # REST controllers
-│   │       ├── dto/                             # Data transfer objects
-│   │       └── service/                         # Business logic services
+│   │       ├── dto/                              # Data transfer objects
+│   │       └── service/                          # Business logic services
 │   └── resources/
-│       ├── application.properties               # Application configuration
-│       ├── static/                             # Static web resources
-│       └── templates/                          # Template files
+│       ├── application.properties                # Application configuration
+│       ├── static/                               # Static web resources
+│       └── templates/                            # Template files
 └── test/
-    └── java/                                   # Test classes
+    └── java/                                     # Test classes
 ```
 
 ## Usage Workflow
