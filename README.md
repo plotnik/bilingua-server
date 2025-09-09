@@ -136,9 +136,7 @@ src/
 │   │       ├── dto/                              # Data transfer objects
 │   │       └── service/                          # Business logic services
 │   └── resources/
-│       ├── application.properties                # Application configuration
-│       ├── static/                               # Static web resources
-│       └── templates/                            # Template files
+│       └── application.properties                # Application configuration
 └── test/
     └── java/                                     # Test classes
 ```
