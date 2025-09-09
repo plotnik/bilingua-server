@@ -11,6 +11,7 @@
 	<groupId>io.github.plotnik</groupId>
 	<artifactId>bilingua-server</artifactId>
 	<version>1.0.0</version>
+	<packaging>war</packaging>
 	<name>bilingua-server</name>
 	<description>A Spring Boot REST API server for managing bilingual text paragraphs</description>
 	<url>https://github.com/plotnik/bilingua-server</url>
@@ -57,18 +58,11 @@
 	</dependencies>
 
 	<build>
+	    <finalName>bilingua</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
