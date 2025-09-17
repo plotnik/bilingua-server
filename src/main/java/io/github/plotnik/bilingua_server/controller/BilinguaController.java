@@ -22,6 +22,18 @@ public class BilinguaController {
     @Autowired
     private BilinguaService bilinguaService;
 
+    @GetMapping("/reload")
+    @Operation(summary = "Reload data", description = "Reloads the pointer and book data")
+    @ApiResponse(responseCode = "200", description = "Successfully reloaded data")
+    public ResponseEntity<Void> reload() {
+        try {
+            bilinguaService.reload();
+            return ResponseEntity.ok().build();
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping("/ptr")
     @Operation(summary = "Get current pointer position", description = "Returns the current position pointer in the text")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved pointer position")

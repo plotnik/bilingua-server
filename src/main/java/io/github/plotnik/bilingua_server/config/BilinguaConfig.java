@@ -13,7 +13,7 @@ import java.util.Properties;
 public class BilinguaConfig {
 
     private Path bilinguaDir;
-    private String book;
+
     private String leftName;
     private String rightName;
 
@@ -27,14 +27,9 @@ public class BilinguaConfig {
         Properties properties = new Properties();
         try (FileReader reader = new FileReader(propertiesFile.toFile())) {
             properties.load(reader);
-            this.book = properties.getProperty("book");
             this.leftName = properties.getProperty("left_name");
             this.rightName = properties.getProperty("right_name");
         }
-    }
-
-    public String getBook() {
-        return book;
     }
 
     public String getLeftName() {

@@ -32,14 +32,12 @@ The application reads configuration from `bi.properties` file located in the `Do
 
 ### Required Properties
 ```properties
-book=path/to/your/obsidian/folder
 left_name=relative/path/to/first/language/file.md
 right_name=relative/path/to/second/language/file.md
 ```
 
 ### Example Configuration
 ```properties
-book=/Users/username/Documents/MyObsidianVault
 left_name=books/novel_english.md
 right_name=books/novel_russian.md
 ```

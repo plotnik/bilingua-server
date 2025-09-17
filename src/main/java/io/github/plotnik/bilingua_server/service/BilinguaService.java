@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
 public class BilinguaService {
 
     @Autowired
-    private BilinguaConfig config; // Injected by Spring
+    private BilinguaConfig config; 
 
     private int ptr;
     private List<String> leftPars;
@@ -29,12 +28,16 @@ public class BilinguaService {
 
     @PostConstruct
     public void initialize() throws IOException {
+        reload();
+    }
+
+    // --- Public API Methods ---
+
+    public synchronized void reload() throws IOException {
         this.ptrFile = config.getBilinguaDir().resolve("ptr.txt");
         loadPtr();
         loadBooks();
     }
-
-    // --- Public API Methods ---
 
     public synchronized int getPtr() {
         return ptr;
@@ -90,7 +93,8 @@ public class BilinguaService {
     }
 
     private List<String> readBookFile(String fileName) throws IOException {
-        Path filePath = Paths.get(config.getBook(), fileName);
+        // Combine config.getBilinguaDir() with fileName
+        Path filePath = config.getBilinguaDir().resolve(fileName);
         if (!Files.exists(filePath)) {
             return Collections.emptyList();
         }
@@ -100,7 +104,7 @@ public class BilinguaService {
     }
 
     private void writeBookFile(String fileName, List<String> paragraphs) throws IOException {
-        Path filePath = Paths.get(config.getBook(), fileName);
+        Path filePath = config.getBilinguaDir().resolve(fileName);
         // Join paragraphs with two newlines
         String content = String.join("\n\n", paragraphs);
         Files.writeString(filePath, content);
