@@ -1,24 +1,27 @@
 package io.github.plotnik.bilingua_server.service;
 
-import io.github.plotnik.bilingua_server.config.BilinguaConfig;
 import io.github.plotnik.bilingua_server.dto.ParagraphPair;
 import jakarta.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class BilinguaService {
 
-    @Autowired
-    private BilinguaConfig config; 
+    private Path bilinguaDir;
+
+    private String leftName;
+    private String rightName;
 
     private int ptr;
     private List<String> leftPars;
@@ -31,10 +34,25 @@ public class BilinguaService {
         reload();
     }
 
+    private void loadConfig() throws IOException {
+        String userHome = System.getProperty("user.home");
+        this.bilinguaDir = Paths.get(userHome, "Documents", "pi", "bilingua");
+
+        Path propertiesFile = bilinguaDir.resolve("bi.properties");
+
+        Properties properties = new Properties();
+        try (FileReader reader = new FileReader(propertiesFile.toFile())) {
+            properties.load(reader);
+            this.leftName = properties.getProperty("left_name");
+            this.rightName = properties.getProperty("right_name");
+        }
+    }
+
     // --- Public API Methods ---
 
     public synchronized void reload() throws IOException {
-        this.ptrFile = config.getBilinguaDir().resolve("ptr.txt");
+        loadConfig();
+        this.ptrFile = bilinguaDir.resolve("ptr.txt");
         loadPtr();
         loadBooks();
     }
@@ -63,10 +81,10 @@ public class BilinguaService {
         boolean rightChanged = updateParagraph(rightPars, ptr, pair.right());
 
         if (leftChanged) {
-            writeBookFile(config.getLeftName(), leftPars);
+            writeBookFile(leftName, leftPars);
         }
         if (rightChanged) {
-            writeBookFile(config.getRightName(), rightPars);
+            writeBookFile(rightName, rightPars);
         }
 
         // If any file was changed, reload everything to ensure consistency
@@ -88,13 +106,13 @@ public class BilinguaService {
     }
 
     public void loadBooks() throws IOException {
-        this.leftPars = readBookFile(config.getLeftName());
-        this.rightPars = readBookFile(config.getRightName());
+        this.leftPars = readBookFile(leftName);
+        this.rightPars = readBookFile(rightName);
     }
 
     private List<String> readBookFile(String fileName) throws IOException {
         // Combine config.getBilinguaDir() with fileName
-        Path filePath = config.getBilinguaDir().resolve(fileName);
+        Path filePath = bilinguaDir.resolve(fileName);
         if (!Files.exists(filePath)) {
             return Collections.emptyList();
         }
@@ -104,7 +122,7 @@ public class BilinguaService {
     }
 
     private void writeBookFile(String fileName, List<String> paragraphs) throws IOException {
-        Path filePath = config.getBilinguaDir().resolve(fileName);
+        Path filePath = bilinguaDir.resolve(fileName);
         // Join paragraphs with two newlines
         String content = String.join("\n\n", paragraphs);
         Files.writeString(filePath, content);
